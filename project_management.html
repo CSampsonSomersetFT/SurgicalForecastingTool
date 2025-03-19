@@ -1,0 +1,42 @@
+<html>
+<body>
+
+<style>
+
+</style>
+    <pre class="mermaid">
+        gantt
+
+            dateFormat YYYY-MM-DD
+            todayMarker off
+            section Stakeholders
+                Scoping          :a1, 2025-03-01, 31d
+                Meet with experts   :a2, after a1, 10d
+                Update stakeholders :a3, 2025-06-01, 14d
+                Present to stakeholders :a4, 2025-08-07, 7d
+
+            section Time series forecasting
+                Gather data :b1, 2025-03-01, 31d
+                Investigate models :b2, 2025-04-01, 30d
+                Refine models :b3, after b2, 14d
+
+            section Simulation
+                Gather data :c1, 2025-04-01, 30d
+                Code simulation :c2, after c1, 31d
+
+                Combine forecasting and simulation :c3, 2025-06-01, 15d
+                Validate results & update model :c4, after c3, 24d
+
+            section Research and Write-Up
+                Review Literature :d1, 2025-03-01, 31d
+                Write proposal :d2, 2025-03-20, 44d
+                Write up project :d3, 2025-07-10, 38d
+                Prepare presentation :d4, 2025-07-20, 21d
+        </pre>
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true,
+        gantt: { todayMarker: false }  });
+</script>
+</body>
+</html>
