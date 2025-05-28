@@ -5,48 +5,12 @@ SET NOCOUNT ON
 Drop Table if exists #Surg;
 
 select  EALEntryNumber
-			,ElectiveAdmissionListType
-			,cast(DecidedToAdmitDate as date) as DateOnList
-			,cast(TCIDate as date) as TCIDate
-			,TreatmentFunctionCode
-			,[Treatment Specialty]
-			,RemovalReason
-			,RemovalDate
-			,Urgency
-			,IntendedSiteCode
-			,IntendedManagement
-			,Procedure1
-			,EALAnticipatedTheatre
-			,SurgicalProcedureDurn
-			,SurgicalProcedure
-
-into #Surg
-
-from ReportingViews.EAL.tblvwEALCensus
-
-where cast(DecidedToAdmitDate as date) >= '01/04/2016'
-and [Treatment Specialty] not like 'Private%'
---and ElectiveAdmissionListType in ('11','12')    --excludes planned
-and AdmissionType = 'Surgical'					  -- includes Surg only
-
-
-select x.DateOnList
-		,count(*) as TotalOfAdditions
-		,x.TreatmentFunctionCode
-		,x.[Treatment Specialty]
-		,sum(x.RemovedWithoutElAdmission)	as RemovedWithoutAdmission
-		,sum(x.RemovedWithElAdmission) as RemovedWithAdmission
-		,sum(x.CurrentlyWaiting) as CurrentlyWaiting
-		,sum(x.RemainedOnTheListWithTCIInPast) as RemainedOnTheListWithTCIInPast
-
-from (
-select EALEntryNumber
-			,TreatmentFunctionCode
-			,[Treatment Specialty]
-			,DateOnList
-			,TCIDate
-			,RemovalDate
-			,RemovalReason
+		,TreatmentFunctionCode
+		,[Treatment Specialty]
+		,cast(DecidedToAdmitDate as date) as DateOnList
+		,cast(TCIDate as date) as TCIDate
+		,RemovalDate
+		,RemovalReason
 		,case
 			when RemovalReason in ('2','3','4') then 1
 			else 0
@@ -68,17 +32,36 @@ select EALEntryNumber
 				and RemovalReason is null then 1
 			else 0
 		end as RemainedOnTheListWithTCIInPast
-		
+		,Urgency
+		,SurgicalProcedureDurn
+		,SurgicalProcedure
 
-		
-from #Surg
+into #Surg
 
-where [Treatment Specialty] not like 'Private%'
+from ReportingViews.EAL.tblvwEALCensus
 
-)x
+where cast(DecidedToAdmitDate as date) >= '01/04/2016'
+and [Treatment Specialty] not like 'Private%'
+--and ElectiveAdmissionListType in ('11','12')    --excludes planned
+and AdmissionType = 'Surgical'					  -- includes Surg only
 
-group by x.DateOnList
-			,x.TreatmentFunctionCode
-			,x.[Treatment Specialty]
 
-order by x.DateOnList
+
+select DateOnList
+		,count(*) as TotalOfAdditions
+		,TreatmentFunctionCode
+		,[Treatment Specialty]
+		,sum(RemovedWithoutElAdmission)	as RemovedWithoutAdmission
+		,sum(RemovedWithElAdmission) as RemovedWithAdmission
+		,sum(CurrentlyWaiting) as CurrentlyWaiting
+		,sum(RemainedOnTheListWithTCIInPast) as RemainedOnTheListWithTCIInPast
+		-- ,Urgency
+
+FROM #Surg 
+
+group by DateOnList
+		,TreatmentFunctionCode
+		,[Treatment Specialty]
+		-- ,Urgency
+
+order by DateOnList
