@@ -145,7 +145,10 @@ def daily_planning(env, beds, schedule, experiment):
                         f"Patient {patient} is unable to be rescheduled today!"
                     )
             else:
-                raise NotImplementedError(f"Unable to reschedule patient {patient}")
+                logging.info(
+                    f"Patient {patient} is unable to be rescheduled today - no available slots!"
+                )
+
                 # surgery too long for anything we have scheduled!!
 
         yield env.timeout(24)

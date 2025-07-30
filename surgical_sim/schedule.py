@@ -146,6 +146,7 @@ class Schedule:
             self.processed_schedule.loc[
                 row_mask, "hours_remaining"
             ] -= patient.surgery_duration
+            logging.info(f"Scheduling {patient.id} for {self.processed_schedule.loc[row_mask, 'hour'].values[0]}")
             self.processed_schedule.loc[row_mask, "patients"].values[0].append(patient)
 
     def __find_slot(self, patient_type, patient, time):
