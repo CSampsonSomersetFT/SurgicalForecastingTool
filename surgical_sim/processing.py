@@ -131,12 +131,14 @@ def daily_planning(env, beds, schedule, experiment):
                             f"Cancelling elective patients to fit patient {patient} in today."
                         )
                         schedule.cancel_patient(patient)
+                        
                         non_em.patients.insert(0, patient)
                         non_em.hours_remaining -= patient.surgery_duration
                         while non_em.hours_remaining < 0:
                             non_em_patient = non_em.patients.pop()
+                            non_em_patient.cancellations.append(env.now)
                             schedule.schedule_patients(
-                                [non_em_patient], non_em_patient.surgery_duration
+                                [non_em_patient], env.now
                             )
                             non_em.hours_remaining += non_em_patient.surgery_duration
                     break
