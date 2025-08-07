@@ -1,1 +1,0 @@
-mssql+pyodbc:///?odbc_connect= DRIVER={SQL Server};SERVER=mph-eprprddwh1\DWHPRD;Trusted_Connection=yes;
